@@ -73,5 +73,26 @@ services:
       timeout: 5s
       retries: 30
 
+  storage:
+    image: chrislusf/seaweedfs:4.52
+    command: server -dir=/data -s3 -s3.port=8333
+    ports:
+      - '8333:8333'
+    volumes:
+      - storage-data:/data
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:8333/']
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  storage-init:
+    image: chrislusf/seaweedfs:4.52
+    entrypoint: ['sh', '-c', "echo 's3.bucket.create -name cdn-local' | weed shell -master=storage:9333"]
+    depends_on:
+      storage:
+        condition: service_healthy
+
 volumes:
   db-data:
+  storage-data:
