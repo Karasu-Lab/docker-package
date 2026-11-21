@@ -26,7 +26,6 @@ services:
       DATABASE_URL: postgres://postgres:postgres@db:5432/karasu256
     volumes:
       - ../../apps/accounts.karasu256.com/drizzle/migrations:/migrations/accounts:ro
-      - ../../apps/qr.karasu256.com/drizzle/migrations:/migrations/qr:ro
     depends_on:
       db:
         condition: service_healthy
