@@ -21,14 +21,19 @@ services:
   db-migrate:
     build:
       context: ./db-migrate
-      network: host
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/karasu256
     volumes:
-      - ../../apps/accounts.karasu256.com/drizzle/migrations:/migrations/accounts:ro
+      - ../../apps/api-auth.karasu256.com/drizzle/migrations:/migrations/api-auth:ro
     depends_on:
       db:
         condition: service_healthy
+
+  d1-migrate:
+    build:
+      context: ./d1-migrate
+    volumes:
+      - ../../apps/mc-auth.karasu256.com:/mc-auth
 
   auth:
     build:
@@ -71,6 +76,18 @@ services:
       interval: 2s
       timeout: 5s
       retries: 30
+
+  redis-rest:
+    image: hiett/serverless-redis-http:0.0.10
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: local-development-redis-token
+      SRH_CONNECTION_STRING: redis://redis:6379
+    ports:
+      - '8079:80'
+    depends_on:
+      redis:
+        condition: service_healthy
 
   storage:
     image: chrislusf/seaweedfs:4.52

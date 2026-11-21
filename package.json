@@ -4,6 +4,8 @@
     "private": true,
     "scripts": {
         "run": "docker compose up -d --wait --build",
+        "run:mc": "sh ./start-daemon.sh && docker compose --progress quiet up -d --wait --build --force-recreate db db-migrate redis-rest && docker compose --progress quiet run --rm --build d1-migrate >/dev/null",
+        "volume-purge": "sh ./start-daemon.sh && docker compose --progress quiet down -v",
         "run:android": "docker compose up -d --wait --build db db-migrate auth firebase",
         "reset": "docker compose down -v && docker compose up -d --wait --build",
         "stop": "docker compose stop",

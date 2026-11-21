@@ -1,0 +1,7 @@
+{
+    "name": "d1-migrate",
+    "private": true,
+    "dependencies": {
+        "wrangler": "^4.147.0"
+    }
+}
